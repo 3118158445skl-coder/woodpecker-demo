@@ -15,22 +15,31 @@ steps:
       - /var/run/docker.sock:/var/run/docker.sock
 
     environment:
-      TCR_USERNAME:
-        from_secret: TCR_USERNAME
-      TCR_PASSWORD:
-        from_secret: TCR_PASSWORD
+      ACR_USERNAME:
+        from_secret: ACR_USERNAME
+      ACR_PASSWORD:
+        from_secret: ACR_PASSWORD
 
     commands:
-      - echo "开始登录腾讯云 TCR..."
-      - echo "$TCR_PASSWORD" | docker login images-skl.tencentcloudcr.com -u "$TCR_USERNAME" --password-stdin
+      - echo "=============================="
+      - echo "登录阿里云 ACR..."
+      - echo "=============================="
 
-      - echo "TCR 登录成功"
+      - echo "$ACR_PASSWORD" | docker login crpi-yhp951ow9ijc89zi.cn-shanghai.personal.cr.aliyuncs.com -u "$ACR_USERNAME" --password-stdin
 
+      - echo "ACR 登录成功"
+
+      - echo "=============================="
       - echo "开始构建镜像..."
-      - docker build -t images-skl.tencentcloudcr.com/k8s-ms/goods-service:latest .
+      - echo "=============================="
 
+      - docker build -t crpi-yhp951ow9ijc89zi.cn-shanghai.personal.cr.aliyuncs.com/harbor_songkangle/yzf:test .
+
+      - echo "=============================="
       - echo "开始推送镜像..."
-      - docker push images-skl.tencentcloudcr.com/k8s-ms/goods-service:latest
+      - echo "=============================="
+
+      - docker push crpi-yhp951ow9ijc89zi.cn-shanghai.personal.cr.aliyuncs.com/harbor_songkangle/yzf:test
 
       - echo "=============================="
       - echo "镜像构建并推送成功！"
