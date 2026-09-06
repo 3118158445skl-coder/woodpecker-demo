@@ -1,0 +1,11 @@
+steps:
+  test:
+    image: alpine:latest
+    commands:
+      - echo "=============================="
+      - echo "Woodpecker CI 构建成功"
+      - echo "=============================="
+      - echo "项目目录："
+      - pwd
+      - echo "当前文件："
+      - ls -la
