@@ -1,12 +1,19 @@
 steps:
-  build:
-    image: gcr.io/kaniko-project/executor:latest
+  test:
+    image: alpine:latest
     commands:
       - echo "=============================="
-      - echo "开始构建 Docker 镜像"
+      - echo "Woodpecker CI 构建测试"
       - echo "=============================="
-      - /kaniko/executor
-        --context=.
-        --dockerfile=Dockerfile
-        --destination=woodpecker-demo:test
-        --no-push
+      - pwd
+      - ls -la
+
+  docker-build:
+    image: docker:cli
+    volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
+    commands:
+      - echo "开始 Docker 构建..."
+      - docker version
+      - docker build -t woodpecker-demo:test .
+      - echo "Docker 构建成功！"
