@@ -10,10 +10,28 @@ steps:
 
   docker-build:
     image: docker:cli
+
     volumes:
       - /var/run/docker.sock:/var/run/docker.sock
+
+    environment:
+      TCR_USERNAME:
+        from_secret: TCR_USERNAME
+      TCR_PASSWORD:
+        from_secret: TCR_PASSWORD
+
     commands:
-      - echo "开始 Docker 构建..."
-      - docker version
-      - docker build -t woodpecker-demo:test .
-      - echo "Docker 构建成功！"
+      - echo "开始登录腾讯云 TCR..."
+      - echo "$TCR_PASSWORD" | docker login images-skl.tencentcloudcr.com -u "$TCR_USERNAME" --password-stdin
+
+      - echo "TCR 登录成功"
+
+      - echo "开始构建镜像..."
+      - docker build -t images-skl.tencentcloudcr.com/k8s-ms/goods-service:latest .
+
+      - echo "开始推送镜像..."
+      - docker push images-skl.tencentcloudcr.com/k8s-ms/goods-service:latest
+
+      - echo "=============================="
+      - echo "镜像构建并推送成功！"
+      - echo "=============================="
